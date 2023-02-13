@@ -48,10 +48,13 @@ const {user} = req.body
 const another_ticket_list = await ticket.find({usuario:String(user)});
   let arr_all_tickets = another_ticket_list.filter(item=>item.estado!=='CERRADO')
   let arr_close_tickets = another_ticket_list.filter(item=>item.estado==='CERRADO')
-  
+  let arr_open_tickets = another_ticket_list.filter(item=>item.estado==='ABIERTO')
+  let arr_process_tickets = another_ticket_list.filter(item=>item.estado==='PROCESO')
+
+  // Marco si estas viendo esto, me quiero matar, en este momento no sirvo para nada xd?, estoy haciendo lo que puedo, se supone que eso de arriba es para que diferenciar los tickets abiertos de los que estan cerrados, en proceso o eso ps nose, lo estoy intentando :)
 
   return res.status(200).json({
-    body: {arr_all_tickets:arr_all_tickets, arr_close_tickets:arr_close_tickets},
+    body: {arr_all_tickets:arr_all_tickets, arr_close_tickets:arr_close_tickets,arr_open_tickets:arr_open_tickets,arr_process_tickets:arr_process_tickets},
     
   });
 });

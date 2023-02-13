@@ -11,7 +11,8 @@ let ticket_schema = new Schema({
     "asignado":{type:String},
     "close_date":{type:Date},
     "titulo":{type:String},
-    "create_date":{type:Date}
+    "create_date":{type:Date},
+    "tecnico":{type:String} // lo agrege porque pense que se iba a necesitar y ahora no se si quitarlo o no
 })
 
 module.exports = ticket_schema;
