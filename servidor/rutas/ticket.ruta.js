@@ -45,6 +45,12 @@ router.get("/edit_ticket", async (req, res) => {
 router.post("/get_ticket_tecnico", async (req, res) => {
 const {user} = req.body
 
+const another_ticket_list = await ticket.find({usuario:String(user)});
+  let arr_all_tickets = another_ticket_list.filter(item=>item.estado!=='CERRADO')
+
+  return res.status(200).json({
+    body: {arr_all_tickets:arr_all_tickets},
+  });
 });
 
 
