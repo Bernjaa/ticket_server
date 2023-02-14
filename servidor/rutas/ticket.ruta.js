@@ -44,19 +44,31 @@ router.get("/edit_ticket", async (req, res) => {
 
 router.post("/get_ticket_tecnico", async (req, res) => {
 const {user} = req.body
+// console.log(user)
 
-const another_ticket_list = await ticket.find({usuario:String(user)});
-  let arr_all_tickets = another_ticket_list.filter(item=>item.estado!=='CERRADO')
+const another_ticket_list = await ticket.find();
+  let arr_all_tickets = another_ticket_list.filter(item=>item.estado==='')
   let arr_close_tickets = another_ticket_list.filter(item=>item.estado==='CERRADO')
-  let arr_open_tickets = another_ticket_list.filter(item=>item.estado==='ABIERTO')
-  let arr_process_tickets = another_ticket_list.filter(item=>item.estado==='PROCESO')
+  let arr_open_tickets = another_ticket_list.filter(item=>item.estado==='ABIERTO' && item.asignado!==user)
+  let arr_my_tickets = another_ticket_list.filter(item=>item.asignado===user && item.estado !=='CERRADO')
 
   // Marco si estas viendo esto, me quiero matar, en este momento no sirvo para nada xd?, estoy haciendo lo que puedo, se supone que eso de arriba es para que diferenciar los tickets abiertos de los que estan cerrados, en proceso o eso ps nose, lo estoy intentando :)
 
   return res.status(200).json({
-    body: {arr_all_tickets:arr_all_tickets, arr_close_tickets:arr_close_tickets,arr_open_tickets:arr_open_tickets,arr_process_tickets:arr_process_tickets},
+    body: {arr_all_tickets:arr_all_tickets, arr_close_tickets:arr_close_tickets,arr_open_tickets:arr_open_tickets,arr_my_tickets:arr_my_tickets},
     
   });
+});
+
+router.post('/asign_ticket', async (req, res) => {
+const {user,ticket_id} = req.body
+await ticket.updateOne({ _id: ticket_id }, { asignado: user, estado:"ABIERTO",start_date:new Date()});
+return res.status(200).json({
+  body: {
+    success: true,
+    msg:"El ticket fue asignado con exito"
+  },
+});
 });
 
 
