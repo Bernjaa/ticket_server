@@ -7,7 +7,7 @@ mongoose.connect(`mongodb://${process.env.DBUSER}:${process.env.DBPASS}@${proces
 useUnifiedTopology: true,
 useNewUrlParser: true
 })
-.then(db => console.log('|=>DDBB'))
+.then(db => console.log('LA BASE DE DATOS SE HA CONECTADO CORRECTAMENTE'))
 .catch(err => console.error(err));
 dbTicket = mongoose.connection.useDb('ticket');
 module.exports = {
