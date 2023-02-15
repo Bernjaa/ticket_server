@@ -9,6 +9,7 @@ let ticket_schema = new Schema({
     "urgencia":{type:String},
     "estado":{type:String},
     "asignado":{type:String},
+    "conclusion":{type:String},
     "close_date":{type:Date},
     "titulo":{type:String},
     "create_date":{type:Date},

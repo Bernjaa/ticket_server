@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const ticket = require("../base_de_datos/models/tickets.models").TICKET;
+const tecnico = require("../base_de_datos/models/tickets.models").TECNICO;
 
 const router = new Router();
 
@@ -71,5 +72,57 @@ return res.status(200).json({
 });
 });
 
+router.post('/guardar_ticket', async (req, res) => {
+  let {state,fecha,titulo,descripcion,urgencia,ubicacion} = req.body
+  let se = new ticket({
+    id_ticket: "",
+    usuario: state,
+    descripcion: descripcion,
+    ubicacion: ubicacion,
+    start_date: null, // fecha en la que se toma el ticket
+    urgencia: urgencia,
+    estado: "",
+    asignado: "",
+    close_date: null, // fecha en la que se cierra el ticket
+    titulo: titulo,
+    create_date: Date(fecha), // fecha en la que el ususario crea el ticket
+  });
+  se.save();
+  return res.status(200).json({
+    body: {
+      success: true,
+      msg:"El ticket fue creado exitosamente."
+    },
+  });
+});
+
+router.post('/cerrar_ticket', async (req,res) => {
+  // console.log(req.body)
+  let {conclusion,id_} = req.body
+  await ticket.updateOne({ _id: id_ }, { conclusion: conclusion, estado:'CERRADO' });
+  return res.status(200).json({
+    body: {
+      msg:"El ticket fue cerrado exitosamente",
+      success:true
+    }
+  });
+})
+
+router.post('/ticket_process', async (req,res) => {
+// console.log(req.body);
+    let {id_,estado} = req.body
+    await ticket.updateOne({_id:id_}, {estado:estado});
+    return res.status(200).json({
+      body:{
+        msg:"El ticket fue modificado exitosamente",
+        success:true
+      }
+    })
+})
+
+router.post('/ticket.filtro', async (req,res) => {
+  let {tecnico,passtecnico} = req.body
+  console.log(req.body);
+})
 
 module.exports = router;
