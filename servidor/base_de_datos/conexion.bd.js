@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 require('dotenv').config()
-
 mongoose.set('strictQuery', false);
 
+//Esto es la conexion a la base de datos
 mongoose.connect(`mongodb://${process.env.DBUSER}:${process.env.DBPASS}@${process.env.DBURL}:27017/${process.env.DBNAME}`, {
 useUnifiedTopology: true,
 useNewUrlParser: true

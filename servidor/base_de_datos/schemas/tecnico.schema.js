@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+//estructura de la tabla de tecnico
 const {Schema} = mongoose;
 let tecnico_schema = new Schema({
     "password":{type:String},

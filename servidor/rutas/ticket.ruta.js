@@ -1,9 +1,13 @@
 const { Router } = require("express");
+//modelo de tickets
 const ticket = require("../base_de_datos/models/tickets.models").TICKET;
-const tecnico = require("../base_de_datos/models/tickets.models").TECNICO;
+//modelo de tecnico
+const Tecnico = require("../base_de_datos/models/tickets.models").TECNICO;
 
+//generador de rutas 
 const router = new Router();
 
+//ruta para obtener los datos de un ticket
 router.get("/", (req, res) => {
   let se = new ticket({
     id_ticket: "10000001",
@@ -25,6 +29,7 @@ router.get("/", (req, res) => {
   });
 });
 
+//ruta para mostrar las 2 columnas de tickets del usuario
 router.post("/get_ticket_user", async (req, res) => {
   const {user} = req.body
   
@@ -36,6 +41,7 @@ router.post("/get_ticket_user", async (req, res) => {
   });
 });
 
+//ruta para editar el ticket 
 router.get("/edit_ticket", async (req, res) => {
   await ticket.updateOne({ id_ticket: "10000002" }, { usuario: "Karen" });
   return res.status(200).json({
@@ -43,6 +49,7 @@ router.get("/edit_ticket", async (req, res) => {
   });
 });
 
+//ruta para ver todos los tickets del tecnico
 router.post("/get_ticket_tecnico", async (req, res) => {
 const {user} = req.body
 // console.log(user)
@@ -61,6 +68,7 @@ const another_ticket_list = await ticket.find();
   });
 });
 
+//ruta para poder asignar el ticket a una persona
 router.post('/asign_ticket', async (req, res) => {
 const {user,ticket_id} = req.body
 await ticket.updateOne({ _id: ticket_id }, { asignado: user, estado:"ABIERTO",start_date:new Date()});
@@ -72,6 +80,7 @@ return res.status(200).json({
 });
 });
 
+//ruta para crear el ticket
 router.post('/guardar_ticket', async (req, res) => {
   let {state,fecha,titulo,descripcion,urgencia,ubicacion} = req.body
   let se = new ticket({
@@ -96,18 +105,20 @@ router.post('/guardar_ticket', async (req, res) => {
   });
 });
 
+//ruta para poder mover el ticket a la columna de cerrados
 router.post('/cerrar_ticket', async (req,res) => {
   // console.log(req.body)
   let {conclusion,id_} = req.body
-  await ticket.updateOne({ _id: id_ }, { conclusion: conclusion, estado:'CERRADO' });
+  await ticket.updateOne({ _id: id_ }, { conclusion: conclusion, estado:'CERRADO', close_date:new Date() });
   return res.status(200).json({
     body: {
       msg:"El ticket fue cerrado exitosamente",
       success:true
     }
   });
-})
+});
 
+//ruta para poder cambiar el estado del ticket a "en proceso"
 router.post('/ticket_process', async (req,res) => {
 // console.log(req.body);
     let {id_,estado} = req.body
@@ -118,11 +129,31 @@ router.post('/ticket_process', async (req,res) => {
         success:true
       }
     })
-})
+});
 
-router.post('/ticket.filtro', async (req,res) => {
-  let {tecnico,passtecnico} = req.body
-  console.log(req.body);
-})
+//ruta para que funcione el filtro
+router.post('/ticket_filtro', async (req,res) => {
+  let {tecnico, passTecnico} = req.body
+  
+ let login_ = await Tecnico.findOne({"email":tecnico, "password":passTecnico})
+  console.log(login_);
+  if (login_) {
+    return res.status(200).json({
+      body:{
+        user:login_.email,
+        success:true
+      }
+    })
+  }else{
+    return res.status(200).json({
+      body:{
+        user:null,
+        success:false
+      }
+    })
+
+  }
+  
+});
 
 module.exports = router;

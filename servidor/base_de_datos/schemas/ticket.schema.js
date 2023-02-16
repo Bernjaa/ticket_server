@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+//estructura de la tabla de tickets
 const {Schema} = mongoose;
 let ticket_schema = new Schema({
     "id_ticket":{type: String},
