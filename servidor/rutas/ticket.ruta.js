@@ -32,7 +32,7 @@ router.get("/", (req, res) => {
 //ruta para mostrar las 2 columnas de tickets del usuario
 router.post("/get_ticket_user", async (req, res) => {
   const {user} = req.body
-  
+  console.log(user);
   const ticket_list = await ticket.find({usuario:String(user)});
   let arr_close = ticket_list.filter(item =>item.estado==='CERRADO')
   let arr_others = ticket_list.filter(item =>item.estado!=='CERRADO')
